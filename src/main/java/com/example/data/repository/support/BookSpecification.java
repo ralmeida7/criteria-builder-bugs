@@ -3,7 +3,7 @@ package com.example.data.repository.support;
 import io.micronaut.data.repository.jpa.criteria.PredicateSpecification;
 import io.micronaut.data.repository.jpa.criteria.QuerySpecification;
 
-public class BookPredicateSpecification {
+public class BookSpecification {
 
     public static <T> PredicateSpecification<T> titleContains(String title) {
         return (root, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.upper(root.get("title")), "%" + title.toUpperCase() + "%");

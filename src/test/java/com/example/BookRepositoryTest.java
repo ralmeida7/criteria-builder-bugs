@@ -2,7 +2,7 @@ package com.example;
 
 import com.example.data.bo.Book;
 import com.example.data.repository.BookRepository;
-import com.example.data.repository.support.BookPredicateSpecification;
+import com.example.data.repository.support.BookSpecification;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,13 +36,13 @@ class BookRepositoryTest {
 
     @Test
     void testUpperCriteriaQuery() {
-        List<Book> books = bookRepository.findAll(BookPredicateSpecification.titleContains("Title"));
+        List<Book> books = bookRepository.findAll(BookSpecification.titleContains("Title"));
         Assertions.assertEquals(5, books.size());
     }
 
     @Test
     void testFieldSelector() {
-        List<Book> books = bookRepository.findAll(BookPredicateSpecification.fieldSelector());
+        List<Book> books = bookRepository.findAll(BookSpecification.fieldSelector());
         Assertions.assertEquals(5, books.size());
         System.out.println(books);
     }
