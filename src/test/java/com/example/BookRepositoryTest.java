@@ -20,6 +20,7 @@ class BookRepositoryTest {
 
     @BeforeEach
     void insertBooks() {
+        bookRepository.deleteAll();
         // Create 5 book instances
         List<Book> books = Arrays.asList(
                 new Book(null, "Title1", "Author1"),
