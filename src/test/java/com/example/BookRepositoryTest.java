@@ -4,6 +4,7 @@ import com.example.data.bo.Book;
 import com.example.data.repository.BookRepository;
 import com.example.data.repository.support.BookPredicateSpecification;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
@@ -17,8 +18,9 @@ class BookRepositoryTest {
     @Inject
     BookRepository bookRepository;
 
-    @Test
-    void testAddBooks() {
+    @BeforeEach
+    void insertBooks() {
+        bookRepository.deleteAll();
         // Create 5 book instances
         List<Book> books = Arrays.asList(
                 new Book(null, "Title1", "Author1"),
@@ -30,38 +32,18 @@ class BookRepositoryTest {
 
         // Save books to the repository
         bookRepository.saveAll(books);
-
-        // Verify the count of books in the repository
-        Assertions.assertEquals(5, bookRepository.count());
-
-        // Verify the details of the books
-        List<Book> savedBooks = (List<Book>) bookRepository.findAll();
-        for (int i = 0; i < books.size(); i++) {
-            Assertions.assertEquals(books.get(i).getTitle(), savedBooks.get(i).getTitle());
-            Assertions.assertEquals(books.get(i).getAuthor(), savedBooks.get(i).getAuthor());
-        }
     }
 
     @Test
     void testUpperCriteriaQuery() {
-        // Create 5 book instances
-        List<Book> books = Arrays.asList(
-                new Book(null, "Title1", "Author1"),
-                new Book(null, "Title2", "Author2"),
-                new Book(null, "Title3", "Author3"),
-                new Book(null, "Title4", "Author4"),
-                new Book(null, "Title5", "Author5")
-        );
+        List<Book> books = bookRepository.findAll(BookPredicateSpecification.titleContains("Title"));
+        Assertions.assertEquals(5, books.size());
+    }
 
-        // Save books to the repository
-        bookRepository.saveAll(books);
-
-        List<Book> saveAll = bookRepository.findAll(BookPredicateSpecification.titleContains("Title"));
-        Assertions.assertEquals(5, saveAll.size());
-
-        saveAll = bookRepository.findAll(BookPredicateSpecification.fieldSelector());
-
-        System.out.println(saveAll);
-
+    @Test
+    void testFieldSelector() {
+        List<Book> books = bookRepository.findAll(BookPredicateSpecification.fieldSelector());
+        Assertions.assertEquals(5, books.size());
+        System.out.println(books);
     }
 }
