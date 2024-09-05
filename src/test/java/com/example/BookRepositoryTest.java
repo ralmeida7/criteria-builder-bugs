@@ -97,6 +97,7 @@ class BookRepositoryTest {
 
         retrievedBook1 = bookRepository.findById(book1.getId()).orElse(null);
 
+        Assertions.assertEquals(1, retrievedBook1.getAuthors().size());
         System.out.println(retrievedBook1.getAuthors());
     }
 }

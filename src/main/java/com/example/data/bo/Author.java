@@ -13,7 +13,7 @@ public class Author {
     @GeneratedValue(generator = "increment")
     private Integer id;
     private String name;
-    @Relation(value = Relation.Kind.MANY_TO_MANY, mappedBy = "author")
+    @Relation(value = Relation.Kind.MANY_TO_MANY, mappedBy = "authors")
     private Set<Book> books;
 
     public Integer getId() {
