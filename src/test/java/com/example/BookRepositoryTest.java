@@ -55,49 +55,44 @@ class BookRepositoryTest {
     @Test
     void testSaveBooksWithAuthors() {
         // Create author instances
-        Author author1 = new Author();
-        author1.setName("Author1");
+        Author author1 = new Author(null, "Author1", null);
 
-        Author author2 = new Author();
-        author2.setName("Author2");
+        Author author2 = new Author(null, "Author2", null);
 
         // Save authors to the repository
-        authorRepository.save(author1);
-        authorRepository.save(author2);
+        author1 = authorRepository.save(author1);
+        author2 = authorRepository.save(author2);
 
         // Create book instances with authors
-        Book book1 = new Book();
-        book1.setTitle("Title1");
-        book1.setAuthors(new HashSet<>(Set.of(author1, author2)));
+        Book book1 = new Book(null, "Title1", new HashSet<>(Set.of(author1, author2)));
 
-        Book book2 = new Book();
-        book2.setTitle("Title2");
-        book2.setAuthors(new HashSet<>(Set.of(author1)));
+        Book book2 = new Book(null, "Title2", new HashSet<>(Set.of(author1)));
 
         // Save books to the repository
-        bookRepository.save(book1);
-        bookRepository.save(book2);
+        book1 = bookRepository.save(book1);
+        book2= bookRepository.save(book2);
 
         // Verify the books and authors are saved correctly
         Assertions.assertEquals(2, bookRepository.count());
         Assertions.assertEquals(2, authorRepository.count());
 
-        Book retrievedBook1 = bookRepository.findById(book1.getId()).orElse(null);
-        Book retrievedBook2 = bookRepository.findById(book2.getId()).orElse(null);
+        Book retrievedBook1 = bookRepository.findById(book1.id()).orElse(null);
+        Book retrievedBook2 = bookRepository.findById(book2.id()).orElse(null);
 
         Assertions.assertNotNull(retrievedBook1);
         Assertions.assertNotNull(retrievedBook2);
-        Assertions.assertEquals(2, retrievedBook1.getAuthors().size());
-        Assertions.assertEquals(1, retrievedBook2.getAuthors().size());
+        Assertions.assertEquals(2, retrievedBook1.authors().size());
+        Assertions.assertEquals(1, retrievedBook2.authors().size());
 
-        retrievedBook1.getAuthors().remove(retrievedBook1.getAuthors().iterator().next());
+        retrievedBook1.authors().remove(retrievedBook1.authors().iterator().next());
+        retrievedBook1 = new Book(retrievedBook1.id(), retrievedBook1.title(), retrievedBook1.authors());
 
-        bookRepository.deleteBookAuthorRelationsByBookId(retrievedBook1.getId());
+        bookRepository.deleteBookAuthorRelationsByBookId(retrievedBook1.id());
         bookRepository.update(retrievedBook1);
 
-        retrievedBook1 = bookRepository.findById(book1.getId()).orElse(null);
+        retrievedBook1 = bookRepository.findById(book1.id()).orElse(null);
 
-        Assertions.assertEquals(1, retrievedBook1.getAuthors().size());
-        System.out.println(retrievedBook1.getAuthors());
+        Assertions.assertEquals(1, retrievedBook1.authors().size());
+        System.out.println(retrievedBook1.authors());
     }
 }
